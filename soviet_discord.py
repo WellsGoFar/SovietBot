@@ -12,6 +12,6 @@ client = discord.Client()
 async def on_ready():
     print(f'{client.user} has connected to discord')
     for guild in client.guilds:
-        print(f'{guild.name}(id: {guild.id}')
+        print(f'{guild.name}(id: {guild.id})')
 
 client.run(TOKEN)
