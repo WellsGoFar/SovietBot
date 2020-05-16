@@ -5,6 +5,8 @@ import json
 import re
 from discord.ext import commands, tasks
 from time import gmtime, strftime
+from soviet_reddit import *
+import asyncio
 
 
 bot = commands.Bot(command_prefix='pp ')
@@ -68,7 +70,7 @@ class funFact(commands.Cog):
     def cog_unload(self):
         self.throw_fact.cancel()
 
-    @tasks.loop(hours=1.0)
+    @tasks.loop(hours=8.0)
     async def throw_fact(self):
         # print(self.index)
         self.index += 1
@@ -82,7 +84,14 @@ class funFact(commands.Cog):
         # print(type(guild))
         print(type(channel))
         #sends a message for looping test
-        await channel.send("Loop test every 1 hour: " + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+        titles, links = get_til()
+        for i in range(len(titles)):
+            message_string = titles[i]
+            message_url = links[i]
+            await channel.send(str("""```css\n{}```\n<{}>""".format(message_string, message_url)))
+            # await asyncio.sleep(5400)
+            await asyncio.sleep(10)
+
 
     @throw_fact.before_loop
     async def before_throw_fact(self):
