@@ -6,19 +6,16 @@ import re
 from discord.ext import commands, tasks
 from time import gmtime, strftime
 
+
 bot = commands.Bot(command_prefix='pp ')
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('GUILD')
 GUILDID = int(os.getenv('GUILDID'))
 BOTTESTCHANNEL = os.getenv('BOTTESTCHANNEL')
-bot = commands.Bot(command_prefix='pp ')
-
-@bot.command(name='tripo',pass_context=True,help = 'tripoloski babyyyy')
-async def tripo(ctx):
-    response = "tripo tripo tripoloski"
-    print(response)
-    await ctx.send(response)
+LOGCHANNEL = os.getenv('LOGCHANNEL')
+bot = commands.Bot(command_prefix=['pp ','Pp ','pP ', 'PP'])
+# guild = bot.get_guild(id=GUILDID)
 
 @bot.event
 async def on_ready():
@@ -31,24 +28,38 @@ class Greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        channel = member.guild.system_channel
+        all_channels = member.guild.text_channels
+        emoji1 = discord.utils.get(member.guild.emojis, name='ussrstar')
+        emoji2 = discord.utils.get(member.guild.emojis, name='ussr')
+        channel = [channel for channel in all_channels if channel.name == LOGCHANNEL][0]
+        # member_mention = '<@{}>'.format(member.id)
         if channel is not None:
-            await channel.send('Welcome {0.mention}.'.format(member))
+            await channel.send('Hey {0.mention} now serves the Soviet Union. Welcome to the **{1}**, comrad! {2}{3}.'.format(member, member.guild.name, str(emoji1), str(emoji2)))
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        all_channels = member.guild.text_channels
+        emoji1 = discord.utils.get(member.guild.emojis, name='roadwarrior')
+        channel = [channel for channel in all_channels if channel.name == LOGCHANNEL][0]
+        if channel is not None:
+            await channel.send('**{0.name}** is no longer a comrad. {1}'.format(member, str(emoji1)))
 
     @commands.command(help = 'the bot will say hello to you because your friends won\'t')
     async def hello(self, ctx, *, member: discord.Member = None):
         member = member or ctx.author
         member_mention = '<@{}>'.format(member.id)
         if self._last_member is None or self._last_member.id != member.id:
-            await ctx.send('Hello {}~'.format(member_mention))
+            await ctx.send('Hello {0.mention}~'.format(member))
         else:
-            await ctx.send('{}... Once is enough, get a life.'.format(member_mention))
+            emoji_saved = discord.utils.get(member.guild.emojis, name="theGayEmoji")
+            print(emoji_saved)
+            await ctx.send('{0.mention}... Once is enough, get a life.{1}'.format(member,str(emoji_saved)))
         self._last_member = member
 
 
 client = discord.Client()
 
-class MyCog(commands.Cog):
+class funFact(commands.Cog):
     def __init__(self,bot):
         self.index = 0
         self.bot = bot
@@ -57,12 +68,12 @@ class MyCog(commands.Cog):
     def cog_unload(self):
         self.throw_fact.cancel()
 
-    @tasks.loop(hours=5.0)
+    @tasks.loop(hours=1.0)
     async def throw_fact(self):
         # print(self.index)
         self.index += 1
-        guild = bot.get_guild(id=GUILDID)
         
+        guild = bot.get_guild(id=GUILDID)
         for channel in guild.channels:
             if channel.name == BOTTESTCHANNEL:
                 break
@@ -71,7 +82,7 @@ class MyCog(commands.Cog):
         # print(type(guild))
         print(type(channel))
         #sends a message for looping test
-        await channel.send("Loop test every 5 hours: " + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+        await channel.send("Loop test every 1 hour: " + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
 
     @throw_fact.before_loop
     async def before_throw_fact(self):
@@ -84,7 +95,7 @@ class ImDad(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self,message):
-        if message.author == bot.user:
+        if message.author == bot.user or message.author.bot:
             return 
 
         cykaObj = re.compile(r'cyka', re.IGNORECASE)
@@ -104,7 +115,14 @@ class ImDad(commands.Cog):
             else: 
                 await message.channel.send(f'Hi {dadName}, I\'m dad')
 
-bot.add_cog(MyCog(bot))
+@bot.command(name='tripo',pass_context=True,help = 'tripoloski babyyyy')
+async def tripo(ctx):
+    response = "tripo tripo tripoloski"
+    print(response)
+    await ctx.send(response)
+
+
+bot.add_cog(funFact(bot))
 bot.add_cog(Greetings(bot))
 bot.add_cog(ImDad(bot))
 
