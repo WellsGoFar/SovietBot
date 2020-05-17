@@ -3,7 +3,7 @@ import pickle
 import urllib.request
 reddit = praw.Reddit('bot1')
 
-# for submission in reddit.subreddit('dankmemes').hot(limit=15):
+# for submission in reddit.subreddit('nsfw_gifs').hot(limit=15):
 
 #     if (not submission.stickied):
 #         print(submission.id)
@@ -30,7 +30,7 @@ def get_til():
     if len(posts)>50:
         posts=posts[24:]
 
-    for submission in reddit.subreddit('todayilearned').hot(limit=5):
+    for submission in reddit.subreddit('todayilearned').hot(limit=3):
         
         if not submission.stickied:
             if submission.id in posts:

@@ -124,8 +124,9 @@ class reddit_handler(commands.Cog):
                 break
         links = get_pifs()
         for link in links:
+            link_id = link.split('/')[-1].split('-')[0]
             print('SENDING PIFS....')
-            await channel.send(link)
+            await channel.send('https://gfycat.com/{}'.format(link_id))
             await asyncio.sleep(1440)
 
     @throw_fact.before_loop
