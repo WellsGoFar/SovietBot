@@ -14,19 +14,28 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx, name: str):
-        self.bot.load_extension(f"cogs.{name}")
-        await ctx.send(f"Loaded extension **{name}.py**")
+        try:
+            self.bot.load_extension(f"cogs.{name}")
+        except Exception as e:
+            return await ctx.send(e)
+        await ctx.send(f"Reloaded extension **{name}.py**")
 
     @commands.command()
     @commands.is_owner()
     async def unload(self, ctx, name: str):
-        self.bot.unload_extension(f"cogs.{name}")
-        await ctx.send(f"Unloaded extension **{name}.py**")
+        try:
+            self.bot.unload_extension(f"cogs.{name}")
+        except Exception as e:
+            return await ctx.send(e)
+        await ctx.send(f"Reloaded extension **{name}.py**")
 
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, name: str):
-        self.bot.reload_extension(f"cogs.{name}")
+        try:
+            self.bot.reload_extension(f"cogs.{name}")
+        except Exception as e:
+            return await ctx.send(e)
         await ctx.send(f"Reloaded extension **{name}.py**")
 
 def setup(bot):

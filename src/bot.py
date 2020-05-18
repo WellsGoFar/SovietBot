@@ -19,5 +19,6 @@ bot.load_extension("cogs.bot_commands_file")
 bot.load_extension("cogs.greetings")
 bot.load_extension("cogs.imdad")
 bot.load_extension("cogs.reddithandler")
+bot.load_extension("cogs.bot_management")
 
 bot.run(TOKEN)
