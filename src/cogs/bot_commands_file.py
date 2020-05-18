@@ -27,6 +27,10 @@ class bot_commands(commands.Cog):
             await ctx.channel.send(embed=embed)
             await asyncio.sleep(2)
             await ctx.channel.purge(limit=2)
+        
+    @commands.command(help = ':: time for a good comeback')
+    async def comeback(self, ctx):  
+        await ctx.send('no u')
 
 def setup(bot):
     bot.add_cog(bot_commands(bot))
