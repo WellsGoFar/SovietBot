@@ -18,18 +18,18 @@ class Admin(commands.Cog):
             self.bot.load_extension(f"cogs.{name}")
         except Exception as e:
             return await ctx.send(e)
-        await ctx.send(f"Reloaded extension **{name}.py**")
+        await ctx.send(f"Loaded extension **{name}.py**")
 
-    @commands.command()
+    @commands.command(help = ":: Unload an extension")
     @commands.is_owner()
     async def unload(self, ctx, name: str):
         try:
             self.bot.unload_extension(f"cogs.{name}")
         except Exception as e:
             return await ctx.send(e)
-        await ctx.send(f"Reloaded extension **{name}.py**")
+        await ctx.send(f"Unloaded extension **{name}.py**")
 
-    @commands.command()
+    @commands.command(help = ":: Reload an extension")
     @commands.is_owner()
     async def reload(self, ctx, name: str):
         try:

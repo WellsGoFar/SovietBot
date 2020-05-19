@@ -26,6 +26,13 @@ class reminder(commands.Cog):
         except:
             await ctx.send(embed = self.get_remind_embed())
             return
+
+        if float(time_to[:-1]) < 0:
+            embed = discord.Embed(title="I can't go back in time yet. That feature is still in development. For now try using positive value for time :)",
+                colour = discord.Colour.blue())
+            await ctx.send(embed=embed)
+            return
+            
         
         if float(time_to[:-1])>30 and time_to[-1] == 'd':
             await ctx.send("Cyka blyat! I cannot set reminders more than 30 days long :(")
