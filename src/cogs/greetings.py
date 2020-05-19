@@ -41,13 +41,5 @@ class Greetings(commands.Cog):
             await ctx.send('{0.mention}... Once is enough, get a life.{1}'.format(member,str(emoji_saved)))
         self._last_member = member
 
-    @commands.command(help = ':: shut the fuck up')
-    async def stfu(self, ctx, *, member: discord.Member = None): 
-        if member is not None: 
-            await ctx.send('SHUT THE FUCK UP {0.mention}!'.format(member))
-        else:
-            await ctx.send('SHUT THE FUCK UP!')
-
-
 def setup(bot):
     bot.add_cog(Greetings(bot))
