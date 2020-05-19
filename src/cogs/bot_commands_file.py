@@ -1,6 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands, tasks
+import re
 
 class bot_commands(commands.Cog):
     def __init__(self,bot):
@@ -8,6 +9,7 @@ class bot_commands(commands.Cog):
 
     @commands.command(help = ':: Tripoloski babyyyyy')
     async def tripo(self, ctx):
+        # await bot.user
         response = "Tri poloski, tripo tri poloski - Три полоски, три по три полоски"
         await ctx.send(response)
 
@@ -64,6 +66,27 @@ class bot_commands(commands.Cog):
                 description='This command accepts two arguments: user mention and the new nickname. \n\nExample: pp changenick @user new_nickname',
                 colour = discord.Colour.blue())
                 await ctx.send(embed=embed)
+
+    @commands.command()
+    async def activity(self,ctx, *, game_name):
+        result = []
+        game_match = re.compile(game_name, re.IGNORECASE)
+        try:
+            for mem in ctx.guild.members:
+                for act in mem.activities:
+                    if game_match.search(str(act.name)):
+                        result.append(mem.name)
+            
+            result = list(dict.fromkeys(result))
+
+            if(not result):
+                await ctx.send("No one is playing that game. Make sure the spelling is correct")
+            else:
+                await ctx.send(', '.join(result))
+
+
+        except Exception as e:
+            await ctx.send(e)
 
 def setup(bot):
     bot.add_cog(bot_commands(bot))
