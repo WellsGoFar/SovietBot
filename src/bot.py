@@ -24,5 +24,6 @@ bot.load_extension("cogs.reddithandler")
 bot.load_extension("cogs.bot_management")
 bot.load_extension("cogs.reminder")
 bot.load_extension("cogs.help")
+bot.load_extension("cogs.server_config")
 
 bot.run(TOKEN)
