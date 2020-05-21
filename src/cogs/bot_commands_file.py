@@ -83,8 +83,6 @@ class bot_commands(commands.Cog):
                 await ctx.send("No one is playing that game. Make sure the spelling is correct")
             else:
                 await ctx.send(', '.join(result))
-
-
         except Exception as e:
             await ctx.send(e)
 

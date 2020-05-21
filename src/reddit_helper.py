@@ -66,7 +66,7 @@ def get_meme():
         if submission.id in posts:
             continue
         else:
-            urllib.request.urlretrieve(submission.url, "resources/dank_memes/{}.jpg".format(submission.id))
+            # urllib.request.urlretrieve(submission.url, "resources/dank_memes/{}.jpg".format(submission.id))
             titles.append(submission.title)
             links.append(submission.url)
             new_posts.append(submission.id)
@@ -91,10 +91,10 @@ def get_pifs():
         posts = posts[99:]
 
     nsfw_multireddit = [mult for mult in reddit.redditor("69sloth").multireddits() if mult.path == '/user/69sloth/m/nsfw_for_bot']
-
+    matcher = ('https://redgifs','https://gfycat','https://i.imgur.com','https://i.redd.it/')
     for submission in nsfw_multireddit[0].hot(limit=15):
 
-        if submission.id in posts:
+        if submission.id in posts or not submission.url.startswith(matcher):
             continue
         else:
             titles.append(submission.title)
