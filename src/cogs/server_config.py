@@ -61,7 +61,7 @@ class server_config(commands.Cog):
         self.mycol.update_one(myquery, newvalues)
 
 
-    @commands.command()
+    @commands.command(name='update_exit')
     @commands.has_permissions(administrator=True)
     async def update_exit_message(self,ctx):
         id = str(ctx.guild.id)
@@ -297,7 +297,7 @@ class server_config(commands.Cog):
         if temp == 1:
             return 
 
-        embed = discord.Embed(title= 'Setup complete, if you want custom Welcome and Exit messages type: ',
+        embed = discord.Embed(title= "Setup complete, if you want custom Welcome and Exit messages type: 'pp update_welcome' and 'pp update_exit'",
             description = 'Enter pp help for more commands')
         await ctx.send(embed=embed)
         

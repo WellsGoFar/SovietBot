@@ -50,8 +50,8 @@ class Greetings(commands.Cog):
             await ctx.send('Hello {0.mention}~'.format(member))
         else:
             # emoji_saved = discord.utils.get(member.guild.emojis, name="triggered")
-            print(emoji_saved)
-            await ctx.send('{0.mention}... Once is enough, get a life. :snowman2:')
+            # print(emoji_saved)
+            await ctx.send('{0.mention}... Once is enough, get a life. :snowman2:'.format(member))
         self._last_member = member
 
 def setup(bot):
