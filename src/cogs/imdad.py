@@ -44,7 +44,7 @@ class ImDad(commands.Cog):
             return 
 
         cykaObj = re.compile(r'cyka', re.IGNORECASE)
-        dadObj = re.compile(r'^im |^i\'m | im | i\'m ', re.IGNORECASE)
+        dadObj = re.compile(r'^im |^i\'m | im | i\'m | i am', re.IGNORECASE)
         if cykaObj.search(message.content):
             # print(message.channel)
             await message.channel.send("cyka blyat")
@@ -52,9 +52,18 @@ class ImDad(commands.Cog):
         if dadObj.search(message.content):
             dadName = message.content[(dadObj.search(message.content).span()[1]): ]
             nameCheck = re.compile(r'dad', re.IGNORECASE)
-
             if nameCheck.search(dadName):
-                await message.channel.send(f'Hi {dadName}, I\'m grandad')
+                try:
+                    granCheck = re.compile(r'gran', re.IGNORECASE)
+                    gran_occ = re.findall(granCheck, message.content)
+                    len_occ = len(gran_occ)
+                    if len_occ > 9:
+                        await message.channel.send('bro, this is just sad, you gotta get a life')
+                    else:
+                        msgg = f'Hi {dadName} I\'m ' +  (len_occ+1)*'gran' + 'dad'
+                        await message.channel.send(msgg)
+                except Exception as e:
+                    await message.channel.send(e)
             
             else: 
                 await message.channel.send(f'Hi {dadName}, I\'m dad')
