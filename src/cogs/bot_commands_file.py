@@ -56,7 +56,10 @@ class bot_commands(commands.Cog):
     @commands.command(help = ':: Shut the fuck up!!')
     async def stfu(self, ctx, *, member: discord.Member = None): 
         if member is not None: 
-            await ctx.send('SHUT THE FUCK UP {0.mention}!'.format(member))
+            if member.name == 'SovietBot':
+                await ctx.send(f'no you shut the fuck up you retard {ctx.author.mention}')
+            else:
+                await ctx.send('SHUT THE FUCK UP {0.mention}!'.format(member))
         else:
             await ctx.send('SHUT THE FUCK UP!')
 
