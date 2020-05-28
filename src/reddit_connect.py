@@ -3,7 +3,7 @@ import pickle
 import urllib.request
 reddit = praw.Reddit('bot1')
 
-# for submission in reddit.subreddit('nsfw_gifs').hot(limit=15):
+# for submission in reddit.subreddit('gaming').hot(limit=15):
 
 #     if (not submission.stickied):
 #         print(submission.id)
@@ -93,7 +93,7 @@ def get_pifs():
 
     nsfw_multireddit = [mult for mult in reddit.redditor("69sloth").multireddits() if mult.path == '/user/69sloth/m/nsfw_for_bot']
 
-    # for submission in reddit.subreddit('60fpsporn').hot(limit=15):   and not submission.url.startswith(matcher)
+    # for submission in reddit.subreddit('gaming').hot(limit=15):   and not submission.url.startswith(matcher)
     matcher = ('https://redgifs','https://gfycat','https://i.imgur.com','https://i.redd.it/')
     for submission in nsfw_multireddit[0].hot(limit=15):
         if submission.id in posts or not submission.url.startswith(matcher):
@@ -112,7 +112,7 @@ def get_pifs():
 
     return links
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    link = get_pifs()
-    print(link)
+#     link = get_pifs()
+#     print(link)
