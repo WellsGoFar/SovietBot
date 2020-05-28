@@ -52,7 +52,7 @@ class server_config(commands.Cog):
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 80.0)
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            return await ctx.send("**oh heck, you waited too long. type 'pp update_welcome' again to begin the setup process**")          
+            return await ctx.send("**oh heck, you waited too long. type 'pp update_welcome' again to update the welcome message for your server**")          
         except Exception as e:
             return await ctx.send(e)
 
@@ -74,7 +74,7 @@ class server_config(commands.Cog):
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 80.0)
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            return await ctx.send("**oh heck, you waited too long. type 'pp update_exit' again to begin the setup process**")          
+            return await ctx.send("**oh heck, you waited too long. type 'pp update_exit' again to update the exit message for your server**")          
         except Exception as e:
             return await ctx.send(e)
 
@@ -95,14 +95,14 @@ class server_config(commands.Cog):
         # print('setup started: ', channel)
         id = str(ctx.guild.id)
         embed = discord.Embed(title = 'Copy and paste the exact name of the channel that you want nfsw on:', 
-            description = "Enter 0 if you dont want a nsfw channel, 'skip' if you don't want to change the channel for nsfw. You can always change that later by using 'pp setup'") #change
+            description = "Enter 0 if you dont want a nsfw channel, 'skip' if you don't want to change the channel for nsfw. You can always change that later by using 'pp setup'/'pp update_nsfw'") #change
 
         await ctx.send(embed = embed)
         try:
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 120.0)
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process")          
+            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process or 'pp update_nsfw' to update the nsfw channel'")          
             return 1
         except Exception as e:
             return await ctx.send(e)
@@ -143,14 +143,14 @@ class server_config(commands.Cog):
         id = str(ctx.guild.id)
         channel = None
         embed = discord.Embed(title = 'Copy and paste the exact name of the channel that you want memes on:', 
-            description = "Enter 0 if you dont want a meme channel, 'skip' if you don't want to change the channel for memes. You can always change that later by using 'pp setup'") #change
+            description = "Enter 0 if you dont want a meme channel, 'skip' if you don't want to change the channel for memes. You can always change that later by using 'pp setup'/'pp update_meme'") #change
 
         await ctx.send(embed = embed) 
         try:
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 120.0) 
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process")
+            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process or 'pp update_meme' to update the meme channel'")
             return 1
         except Exception as e:
             return await ctx.send(e)
@@ -189,14 +189,14 @@ class server_config(commands.Cog):
         channel = None
         id = str(ctx.guild.id)
         embed = discord.Embed(title = 'Copy and paste the exact name of the channel that you want facts on:', 
-            description = "Enter 0 if you dont want a facts channel, 'skip' if you don't want to change the channel for facts. You can always change that later by using 'pp setup'") #change
+            description = "Enter 0 if you dont want a facts channel, 'skip' if you don't want to change the channel for facts. You can always change that later by using 'pp setup'/'pp update_facts'") #change
 
         await ctx.send(embed = embed) 
         try:
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 120.0) 
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process")          
+            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process or 'pp update_facts' to update the facts channel'")          
             return 1
         except Exception as e:
             return await ctx.send(e)
@@ -237,14 +237,14 @@ class server_config(commands.Cog):
         id = str(ctx.guild.id)
         channel = None
         embed = discord.Embed(title = 'Copy and paste the exact name of the channel that you want logs on:', 
-            description = "Enter 0 if you dont want a logs channel, 'skip' if you don't want to change the channel for logs. You can always change that later by using 'pp setup'") #change
+            description = "Enter 0 if you dont want a logs channel, 'skip' if you don't want to change the channel for logs. You can always change that later by using 'pp setup'/'pp update_logs'") #change
 
         await ctx.send(embed = embed)
         try:
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 120.0) 
         except asyncio.TimeoutError:
             await ctx.channel.purge(limit=1)
-            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process")  
+            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process or 'pp update_logs' to update the logs channel'")  
             return 1
         except Exception as e:
             return await ctx.send(e)
