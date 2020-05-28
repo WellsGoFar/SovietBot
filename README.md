@@ -15,7 +15,6 @@ git clone https://github.com/WellsGoFar/SovietBot.git
 You will also need to install the following libraries:
 
 ```
-apt install python3-pip
 pip install discord.py
 pip install praw
 pip install asyncio
