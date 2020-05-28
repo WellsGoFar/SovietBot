@@ -1,4 +1,4 @@
-from reddit_helper import *
+from reddit_connect import *
 import discord
 import os
 from discord.ext import commands, tasks
@@ -35,7 +35,7 @@ class reddit_handler(commands.Cog):
     @tasks.loop(hours=8.0)
     async def throw_fact(self):
         # print('hi1')
-        mydoc = self.mycol.find()
+        # mydoc = self.mycol.find()
         # print('hi2')
         titles, links = get_til()
         # print('hi2')
@@ -52,14 +52,18 @@ class reddit_handler(commands.Cog):
                     message_string = titles[i] 
                     message_url = links[i]
                     print('SENDING FACT....')
-                    await channel.send(str("""```css\n{}```Source: <{}>\n.""".format(message_string, message_url)))
-                    await asyncio.sleep(1)
+                    if channel:
+                        await channel.send(str("""```css\n{}```Source: <{}>\n.""".format(message_string, message_url)))
+                    else:
+                        continue
+            await asyncio.sleep(1000)
 
 
     @tasks.loop(hours=3.0)
     async def throw_meme(self):
 
         titles, links = get_meme()
+        print(titles)
         print('meme new cycle...')
         # print(len(titles))
         for i in range(len(titles)):
@@ -81,8 +85,11 @@ class reddit_handler(commands.Cog):
                         )
                     embed.set_image(url=meme_url)
                     print('SENDING MEME....')
-                    await channel.send(embed=embed)
-                    await asyncio.sleep(1)
+                    if channel:
+                        await channel.send(embed=embed)
+                    else:
+                        continue
+                    # await asyncio.sleep(1)
 
     @tasks.loop(hours=4.0)
     async def throw_pifs(self):
@@ -90,8 +97,11 @@ class reddit_handler(commands.Cog):
         # for channel in guild.channels:
         #     if channel.name == NSFWCHANNEL:
         #         break
+        
         links = get_pifs()
-        mydoc = self.mycol.find() 
+        print(links)
+        # print('new new new', links)
+        # mydoc = self.mycol.find() 
         print('pifs new cycle...')
         for link in links:
             mydoc = self.mycol.find() 
@@ -100,9 +110,12 @@ class reddit_handler(commands.Cog):
                     continue
                 else:
                     channel = self.bot.get_channel(int(x['nsfw_channel']))
-                    print('SENDING PIFS....')
-                    await channel.send(link)     
-                    await asyncio.sleep(1)
+                    if channel:
+                        print('SENDING PIFS....')
+                        await channel.send(link)     
+                    else:
+                        continue
+                    # await asyncio.sleep(1)
 
 
     # @tasks.loop(hours=4)

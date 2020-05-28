@@ -11,15 +11,16 @@ class help(commands.Cog):
     async def help(self, ctx):
         await ctx.send ("""```nimrod
 Commands:\n
-  "hello"      :: the bot will say hello to you because your friends won't
-  "changenick" :: Changes nickname of a user
-  "clear"      :: Clear messages, accepts amount defaults to 10
-  "comeback"   :: Time for a good comeback
-  "nuke"       :: Deletes all the messages in a text channel
-  "stfu"       :: Shut the fuck up!!
-  "tripo"      :: Tripoloski babyyyyy
-  "remindme"   :: Reminds you with time duration mentioned
-  "activty"    :: Check what members of the server are playing a game: example: pp activity rainbow six\n
+  "hello"                    :: the bot will say hello to you because your friends won't
+  "changenick"               :: Changes nickname of a user
+  "clear"                    :: Clear messages, accepts amount defaults to 10
+  "comeback"                 :: Time for a good comeback
+  "nuke"                     :: Deletes all the messages in a text channel
+  "stfu"                     :: Shut the fuck up!!
+  "tripo"                    :: Tripoloski babyyyyy
+  "simp"                     :: for when you come across a simp
+  "remindme"                 :: Reminds you with time duration mentioned
+  "activty"/"playing"        :: Check what members of the server are playing a game: example: pp activity rainbow six\n
 --------------------------------------------
 
 Server Configuration:\n

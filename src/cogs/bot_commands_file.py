@@ -17,10 +17,10 @@ class bot_commands(commands.Cog):
     @commands.has_permissions(manage_messages = True)
     async def clear(self,ctx,amount=10):
         await ctx.channel.purge(limit=amount+1)
-        await ctx.channel.send("Cleared **{}** messages".format(amount+1))
+        msg = await ctx.send("Cleared **{}** messages".format(amount+1), delete_after = 1.5)
         await asyncio.sleep(1.5)
-        await ctx.channel.purge(limit=1)
-        
+
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
@@ -33,6 +33,17 @@ class bot_commands(commands.Cog):
     @commands.command(help = ':: Time for a good comeback')
     async def comeback(self, ctx):  
         await ctx.send('no u')
+
+    @commands.command()
+    async def simp(self, ctx, *, member: discord.Member = None):
+        try:
+            if member:
+                await ctx.send("pathetic {0.mention}".format(member))
+                await ctx.send(file=discord.File('D:/SovietBot/src/resources/simp.jpg'))
+            else:
+                await ctx.send(file=discord.File('D:/SovietBot/src/resources/simp.jpg'))
+        except Exception as e:
+            await ctx.send(e)
 
     @commands.command(help = ':: Deletes all the messages in a text channel')
     @commands.has_permissions(administrator=True)
@@ -67,7 +78,7 @@ class bot_commands(commands.Cog):
                 colour = discord.Colour.blue())
                 await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases = ['playing'])
     async def activity(self,ctx, *, game_name):
         result = []
         game_match = re.compile(game_name, re.IGNORECASE)

@@ -45,7 +45,7 @@ class ImDad(commands.Cog):
             self.mycol.update_one(myquery, newvalues)
             for x in mydoc:
                 if x['guildID'] == str(message.guild.id):
-                    await message.channel.send('f counter: {}'.format(x['f_count'] ))
+                    await message.channel.send('Respects were paid {} times.'.format(x['f_count'] ))
 
 
 def setup(bot):

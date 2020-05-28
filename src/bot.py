@@ -26,4 +26,4 @@ bot.load_extension("cogs.reminder")
 bot.load_extension("cogs.help")
 bot.load_extension("cogs.server_config")
 
-bot.run(TOKEN)
+bot.run(TOKEN)#D:\SovietBot\src\cogs\__pycache__
