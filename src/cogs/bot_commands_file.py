@@ -49,19 +49,27 @@ class bot_commands(commands.Cog):
     @commands.has_permissions(administrator = True)
     async def lockdown(self,ctx):
         try:
-            overwrite = {
-                ctx.guild.default_role: discord.PermissionOverwrite(
-                    send_messages=False,
-                    read_messages=False
-            )
-            }
+            old_perm = ctx.channel.overwrites_for(ctx.guild.default_role)
+            overwrite=None
+            for x,y in old_perm:
+                if x == 'read_messages':
+                    overwrite = {
+                        ctx.guild.default_role: discord.PermissionOverwrite(
+                            send_messages=False,
+                            read_messages = y
+                    )
+                    }
             embed = discord.Embed(title = 'Channel Lockeddown',description = f'{ctx.channel.mention} has been put under lockdown')
             embed.set_footer(text = f'This channel is under quarantine', icon_url = self.bot.user.avatar_url)
             await ctx.send(embed = embed)
-
-            name_old = ctx.channel.name
-            name_new = 'quarantine-'+name_old
-            await ctx.channel.edit(name=name_new,overwrites = overwrite)
+            name_old = str(ctx.channel.name)
+            name_new=None
+            if not name_old.startswith('quarantine-'):
+                name_new = 'quarantine-'+name_old
+            else:
+                name_new=name_old
+            await ctx.channel.edit(overwrites = overwrite)
+            await ctx.channel.edit(name = name_new)
         except Exception as e:
             print(e)
 
