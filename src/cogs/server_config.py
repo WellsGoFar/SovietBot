@@ -22,16 +22,14 @@ class server_config(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        # myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-        # mydb = myclient["tesdb"]
-        # mycol = mydb["testcollection"]
 
         data = {'guildID': str(guild.id), 'guildName': guild.name,'nsfw_channel': '0', 'meme_channel': '0', 'facts_channel': '0', 'logs_channel': '0', 'welcome_message': 'Hello {user.name} welcome to {server.name}', 'exit_message': 'Sad to see you leave {user.name}', 'f_count': 0}
         x = self.mycol.insert_one(data)
         embed = discord.Embed(title = "Hello there! Thanks for adding me to your server. To get started type pp setup")
         for channel in guild.text_channels:
-            await channel.send(embed=embed)
-            break
+            if channel.permissions_for(self.bot.user):
+                await channel.send(embed=embed)
+                break
 
 
     @commands.Cog.listener()
