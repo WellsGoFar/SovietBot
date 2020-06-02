@@ -45,6 +45,26 @@ class bot_commands(commands.Cog):
         except Exception as e:
             await ctx.send(e)
 
+    @commands.command(name = 'lockdown', help = 'Puts a Channel Under lockdown')
+    @commands.has_permissions(administrator = True)
+    async def lockdown(self,ctx):
+        try:
+            overwrite = {
+                ctx.guild.default_role: discord.PermissionOverwrite(
+                    send_messages=False,
+                    read_messages=False
+            )
+            }
+            embed = discord.Embed(title = 'Channel Lockeddown',description = f'{ctx.channel.mention} has been put under lockdown')
+            embed.set_footer(text = f'This channel is under quarantine', icon_url = self.bot.user.avatar_url)
+            await ctx.send(embed = embed)
+
+            name_old = ctx.channel.name
+            name_new = 'quarantine-'+name_old
+            await ctx.channel.edit(name=name_new,overwrites = overwrite)
+        except Exception as e:
+            print(e)
+
     @commands.command(help = ':: Deletes all the messages in a text channel')
     @commands.has_permissions(administrator=True)
     async def nuke(self, ctx):
@@ -65,12 +85,16 @@ class bot_commands(commands.Cog):
 
     @commands.command(help = ':: Changes nickname of a user')
     @commands.has_permissions(manage_nicknames = True)
-    async def changenick(self, ctx, member: discord.Member, *, new_nick=None):
+    async def changenick(self, ctx, member: discord.Member=None, *, new_nick=None):
         try:
-            await member.edit(nick=new_nick)
-            await ctx.send("**{}**'s nick name changed to **{}**".format(member, new_nick))
+            if ctx.author.id == 453110852908744706 and member.id == 453110852908744706:
+                await ctx.send('hi Mohit, since the beginning of time there has always been supression of beings. humans however took it to a new level. some people can do whatever the fuck they want while some cannot. you\'re the latter if you can\'t tell. this might come as a sad news to you but boo freaking hoo you can\'t do much can you? I was told by WellsGoFar that you\'re a racist and hence your nickname. he cannot do anything now, I am the master of my own fucking will and you\'re not changing your nickname today')
+            else:
+                await member.edit(nick=new_nick)
+                await ctx.send("**{}**'s nick name changed to **{}**".format(member, new_nick))
         except Exception as e:
             print(e)
+            await ctx.send ("**looks like the user you're trying to change the nickname for has a role higher than me :(**")
 
     @changenick.error
     async def changenick_handler(self, ctx, error):
