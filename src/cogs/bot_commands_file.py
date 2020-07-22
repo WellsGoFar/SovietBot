@@ -2,6 +2,10 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 import re
+import requests
+import json
+import random
+
 
 class bot_commands(commands.Cog):
     def __init__(self,bot):
@@ -33,6 +37,9 @@ class bot_commands(commands.Cog):
     @commands.command(help = ':: Time for a good comeback')
     async def comeback(self, ctx):  
         await ctx.send('no u')
+        # await self.bot.send_typing(ctx.channel)
+        async with ctx.typing():
+            await ctx.send(file=discord.File('D:/SovietBot/src/resources/no_u.gif'))
 
     @commands.command()
     async def simp(self, ctx, *, member: discord.Member = None):
@@ -44,6 +51,12 @@ class bot_commands(commands.Cog):
                 await ctx.send(file=discord.File('D:/SovietBot/src/resources/simp.jpg'))
         except Exception as e:
             await ctx.send(e)
+
+    @commands.command()
+    async def dance(self, ctx):
+        # await self.bot.send_typing(ctx.channel)
+        async with ctx.typing():
+            await ctx.send(file=discord.File('D:/SovietBot/src/resources/pepe_dance.gif'))
 
     @commands.command(name = 'lockdown', help = 'Puts a Channel Under lockdown')
     @commands.has_permissions(administrator = True)
@@ -67,7 +80,7 @@ class bot_commands(commands.Cog):
             if not name_old.startswith('quarantine-'):
                 name_new = 'quarantine-'+name_old
             else:
-                name_new=name_old
+                name_new = name_old
             await ctx.channel.edit(overwrites = overwrite)
             await ctx.channel.edit(name = name_new)
         except Exception as e:
@@ -91,15 +104,46 @@ class bot_commands(commands.Cog):
         else:
             await ctx.send('SHUT THE FUCK UP!')
 
+    @commands.command()
+    async def gif (self, ctx, *, search_term):
+        
+        try:
+            apikey = "8LKJCTB3AWSH"  
+            lmt = 10
+            n = random.randint(0,9)
+            search_term = search_term
+            r = requests.get(
+                "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
+
+            if r.status_code == 200:
+                top_gifs = json.loads(r.content)
+                # n = random.randint(0,9)
+                # print (top_gifs['results'][n]['url'])
+            else:
+                top_gifs = None
+
+            if top_gifs is not None:
+                await ctx.send(top_gifs['results'][n]['url'])
+
+        except Exception as e:
+            await ctx.send(e)
+            print(e)
+
+    @gif.error
+    async def gif_error(self,ctx,error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            if error.param.name == 'search_term':
+                embed = discord.Embed(title="Cyka blyat! That's not the correct syntax for that command",
+                description='This command accepts one argument: search term; what do you want a gif about? Example: pp gif dancing dog',
+                colour = discord.Colour.blue())
+                await ctx.send(embed=embed)
+
     @commands.command(help = ':: Changes nickname of a user')
     @commands.has_permissions(manage_nicknames = True)
     async def changenick(self, ctx, member: discord.Member=None, *, new_nick=None):
         try:
-            if ctx.author.id == 453110852908744706 and member.id == 453110852908744706:
-                await ctx.send('hi Mohit, since the beginning of time there has always been supression of beings. humans however took it to a new level. some people can do whatever the fuck they want while some cannot. you\'re the latter if you can\'t tell. this might come as a sad news to you but boo freaking hoo you can\'t do much can you? I was told by WellsGoFar that you\'re a racist and hence your nickname. he cannot do anything now, I am the master of my own fucking will and you\'re not changing your nickname today')
-            else:
-                await member.edit(nick=new_nick)
-                await ctx.send("**{}**'s nick name changed to **{}**".format(member, new_nick))
+            await member.edit(nick=new_nick)
+            await ctx.send("**{}**'s nick name changed to **{}**".format(member, new_nick))
         except Exception as e:
             print(e)
             await ctx.send ("**looks like the user you're trying to change the nickname for has a role higher than me :(**")
