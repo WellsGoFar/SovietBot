@@ -108,25 +108,32 @@ class bot_commands(commands.Cog):
     async def gif (self, ctx, *, search_term):
         
         try:
-            apikey = "8LKJCTB3AWSH"  
-            lmt = 10
-            n = random.randint(0,9)
-            search_term = search_term
-            r = requests.get(
-                "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
-
-            if r.status_code == 200:
-                top_gifs = json.loads(r.content)
-                # n = random.randint(0,9)
-                # print (top_gifs['results'][n]['url'])
+            if "ashwin" in search_term.split():
+                await ctx.send("**fuck off retard**")
             else:
-                top_gifs = None
+                apikey = "8LKJCTB3AWSH"  
+                lmt = 10
+                n = random.randint(0,9)
+                search_term = search_term
+                r = requests.get(
+                    "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
 
-            if top_gifs is not None:
-                await ctx.send(top_gifs['results'][n]['url'])
+                if r.status_code == 200:
+                    top_gifs = json.loads(r.content)
+                    # n = random.randint(0,9)
+                    # print (top_gifs['results'][n]['url'])
+                else:
+                    top_gifs = None
+
+                if top_gifs is not None and len(top_gifs['results']) != 0:
+                    await ctx.send(top_gifs['results'][n]['url'])
+                
+                else:
+                    await ctx.send('**cyka blyat, that returned no results**')
 
         except Exception as e:
-            await ctx.send(e)
+            # await ctx.send(e)
+            await ctx.send('**cyka blyat, that returned no results**')
             print(e)
 
     @gif.error
