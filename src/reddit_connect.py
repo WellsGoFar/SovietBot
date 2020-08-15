@@ -73,15 +73,18 @@ def get_meme():
             # print(submission.permalink)
 
     posts = posts + new_posts
-    
+     
     with open('resources/tracks/meme_posts.txt', 'w') as filehandler:
         for listitem in posts:
             filehandler.write('%s\n' % listitem)  
     
     return titles, links
 
+def get_test():
+    return ('this is a test function')
+
 def get_pifs():
-    print('inside get pifs line 84')
+    # print('inside get pifs line 84')
     titles, links, posts, new_posts = [], [], [], []
     with open('resources/tracks/pifs.txt','r') as filehandler:
         for line in filehandler:
@@ -114,5 +117,5 @@ def get_pifs():
 
 # if __name__ == "__main__":
 
-#     link = get_pifs()
+#     link = get_meme()
 #     print(link)

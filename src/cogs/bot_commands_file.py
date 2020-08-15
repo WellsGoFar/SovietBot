@@ -4,6 +4,8 @@ from discord.ext import commands, tasks
 import re
 import requests
 import json
+from reddit_connect import *
+import reddit_connect
 import random
 
 
@@ -105,36 +107,40 @@ class bot_commands(commands.Cog):
             await ctx.send('SHUT THE FUCK UP!')
 
     @commands.command()
-    async def gif (self, ctx, *, search_term):
-        
+    async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
+
         try:
-            async with ctx.typing():
-                if "ashwin" in search_term.split():
-                    await ctx.send("**fuck off retard**")
+            if "ashwin" in search_term:
+                await ctx.send("**fuck off retard**")
+            else:
+                apikey = "8LKJCTB3AWSH"  
+                lmt = 10
+                search_term = search_term
+                # async with ctx.typing():
+                await ctx.trigger_typing()
+                if search_term == 'trending_right_now_19190572':
+                    r = requests.get("https://api.tenor.com/v1/trending?key=%s&limit=%s" % (apikey, lmt))
                 else:
-                    apikey = ""  
-                    lmt = 10
-                    # n = random.randint(0,9)
-                    search_term = search_term
-                    r = requests.get(
-                        "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
+                    r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
 
-                    if r.status_code == 200:
-                        top_gifs = json.loads(r.content)
-                        # n = random.randint(0,9)
-                        # print (top_gifs['results'][n]['url'])
-                    else:
-                        top_gifs = None
+                if r.status_code == 200:
+                    top_gifs = json.loads(r.content)
+                else:
+                    top_gifs = None
 
-                    if top_gifs is not None and len(top_gifs['results']) != 0:
-                        n = random.randint(0,len(top_gifs['results']))
-                        await ctx.send(top_gifs['results'][n]['url'])
+                if top_gifs is not None and len(top_gifs['results']) != 0:
+                    n = random.randint(0,len(top_gifs['results']))
+                    gif_msg = await ctx.send(top_gifs['results'][n]['url'])
+                    msg_id = gif_msg.id
+
+                    # await gif_msg.add_reaction('✅')
+                    # await gif_msg.add_reaction('❎')
                     
-                    else:
-                        await ctx.send('**cyka blyat, that returned no results**')
+                
+                else:
+                    await ctx.send('**cyka blyat, that returned no results**')
 
         except Exception as e:
-            # await ctx.send(e)
             await ctx.send('**cyka blyat, that returned no results**')
             print(e)
 
@@ -146,6 +152,13 @@ class bot_commands(commands.Cog):
                 description='This command accepts one argument: search term; what do you want a gif about? Example: pp gif dancing dog',
                 colour = discord.Colour.blue())
                 await ctx.send(embed=embed)
+
+    roasts=[]
+
+    @commands.command()
+    async def roast(self, stc, member: discord.Member=None):
+        pass
+
 
     @commands.command(help = ':: Changes nickname of a user')
     @commands.has_permissions(manage_nicknames = True)
@@ -165,6 +178,33 @@ class bot_commands(commands.Cog):
                 description='This command accepts two arguments: user mention and the new nickname. \n\nExample: pp changenick @user new_nickname',
                 colour = discord.Colour.blue())
                 await ctx.send(embed=embed)
+
+    @commands.command(aliases = ['latency'])
+    async def ping(self, ctx):
+        await ctx.send('Pong! {0}'.format(self.bot.latency))
+
+    # @commands.command()
+    # async def testreddit(self,ctx):
+    #     try:
+    #         import os
+    #         cwd = os.getcwd()
+    #         await ctx.send(cwd)
+    #         ttt = reddit_connect.get_test()
+    #         await ctx.send(ttt)
+    #         # link_test = reddit_connect.get_meme()
+    #         # await ctx.send(link_test)
+    #     except Exception as e:
+    #         await ctx.send(e)
+
+
+
+    @commands.command()
+    async def ding(self,ctx):
+        await ctx.send('dong motherfucker!')
+
+    @commands.command()
+    async def scooby(self,ctx):
+        await ctx.send('dooby doo!')
 
     @commands.command(aliases = ['playing'])
     async def activity(self,ctx, *, game_name):

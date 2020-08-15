@@ -35,6 +35,14 @@ class ImDad(commands.Cog):
         except Exception as e:
             print(e)
 
+    # @commands.Cog.listener()
+    # async def on_member_update(self,before,after):
+    #     if after.id == 453110852908744706:
+    #         # print('ashwin changed something')
+    #         if str(before.nick) != str(after.nick):
+    #             await after.edit(nick='racist boi')
+
+
     @commands.Cog.listener()
     async def on_message(self,message):
 
@@ -44,7 +52,7 @@ class ImDad(commands.Cog):
             return 
 
         cykaObj = re.compile(r'cyka', re.IGNORECASE)
-        dadObj = re.compile(r'^im |^i\'m | im | i\'m | i am', re.IGNORECASE)
+        dadObj = re.compile(r'^im | ^i\'m | im | i\'m |i am ', re.IGNORECASE)
         if cykaObj.search(message.content):
             # print(message.channel)
             await message.channel.send("cyka blyat")
@@ -88,6 +96,8 @@ class ImDad(commands.Cog):
                     await message.channel.send('Respects were paid {} times.'.format(self.f_count[guildID]))
             except Exception as e:
                 await message.channel.send(e)
+
+        # await self.bot.process_commands(message)
 
     @update_server_f_counts.before_loop
     async def before_server_f_count_update(self):

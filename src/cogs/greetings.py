@@ -43,6 +43,8 @@ class Greetings(commands.Cog):
             message = ("**" + member.name + "**").join(message.split('{user.name}'))
             message = ("**" + member.guild.name + "**").join(message.split('{server.name}'))
             await channel.send(message)
+
+            
     @commands.command(help = ':: the bot will say hello to you because your friends won\'t')
     async def hello(self, ctx, *, member: discord.Member = None):
         member = member or ctx.author
