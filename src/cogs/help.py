@@ -18,6 +18,7 @@ Commands:\n
   "nuke"                     :: Deletes all the messages in a text channel
   "stfu"                     :: Shut the fuck up!!
   "tripo"                    :: Tripoloski babyyyyy
+  "gif"                      :: Get a random gif based on a search term; Example: pp gif dancing dog. Leave search term black for trending gifs
   "simp"                     :: for when you come across a simp
   "remindme"                 :: Reminds you with time duration mentioned
   "activty"/"playing"        :: Check what members of the server are playing a game: example: pp activity rainbow six\n

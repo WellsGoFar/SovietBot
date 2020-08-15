@@ -10,8 +10,8 @@ mycol = mydb["testcollection"]
 
 # y = mycol.insert_one(data)
 
-for i in range (2):
-    mydoc = mycol.find()
-    for x in mydoc:
-        print(x['guildID'])
-        print(x['facts_channel'])
+
+mydoc = mycol.find()
+for x in mydoc:
+    print(x['guildID'])
+    print(x['facts_channel'])
