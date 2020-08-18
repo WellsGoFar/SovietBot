@@ -7,6 +7,7 @@ import json
 from reddit_connect import *
 import reddit_connect
 import random
+import aiohttp
 
 
 class bot_commands(commands.Cog):
@@ -106,9 +107,15 @@ class bot_commands(commands.Cog):
         else:
             await ctx.send('SHUT THE FUCK UP!')
 
-    @commands.command()
-    async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
 
+    async def fetch(self, session, url):
+        async with session.get(url, raise_for_status=True) as response:
+            if response.status is not 200:
+                return None
+            else:
+                return await response.text()
+
+    async def get_gif_tenor(self, search_term, ctx):
         try:
             if "ashwin" in search_term:
                 await ctx.send("**fuck off retard**")
@@ -118,15 +125,12 @@ class bot_commands(commands.Cog):
                 search_term = search_term
                 # async with ctx.typing():
                 await ctx.trigger_typing()
-                if search_term == 'trending_right_now_19190572':
-                    r = requests.get("https://api.tenor.com/v1/trending?key=%s&limit=%s" % (apikey, lmt))
-                else:
-                    r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
-
-                if r.status_code == 200:
-                    top_gifs = json.loads(r.content)
-                else:
-                    top_gifs = None
+                async with aiohttp.ClientSession() as session:    
+                    if search_term == 'trending_right_now_19190572':
+                        r = await self.fetch(session, "https://api.tenor.com/v1/trending?key=%s&limit=%s" % (apikey, lmt))
+                    else:
+                        r = await self.fetch(session, "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
+                    top_gifs = json.loads(r)
 
                 if top_gifs is not None and len(top_gifs['results']) != 0:
                     n = random.randint(0,len(top_gifs['results']))
@@ -135,14 +139,19 @@ class bot_commands(commands.Cog):
 
                     # await gif_msg.add_reaction('✅')
                     # await gif_msg.add_reaction('❎')
-                    
-                
+            
                 else:
                     await ctx.send('**cyka blyat, that returned no results**')
 
         except Exception as e:
             await ctx.send('**cyka blyat, that returned no results**')
             print(e)
+
+
+    @commands.command()
+    async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.get_gif_tenor(search_term, ctx))
 
     @gif.error
     async def gif_error(self,ctx,error):
