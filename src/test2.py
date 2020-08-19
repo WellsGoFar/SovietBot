@@ -1,17 +1,37 @@
-import pymongo
+@commands.command()
+async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
 
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["tesdb"]
-mycol = mydb["testcollection"]
+    try:
+        if "ashwin" in search_term:
+            await ctx.send("**fuck off retard**")
+        else:
+            apikey = "8LKJCTB3AWSH"  
+            lmt = 10
+            search_term = search_term
+            # async with ctx.typing():
+            await ctx.trigger_typing()
+            if search_term == 'trending_right_now_19190572':
+                r = requests.get("https://api.tenor.com/v1/trending?key=%s&limit=%s" % (apikey, lmt))
+            else:
+                r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
 
-# mydoc = mycol.find()
+            if r.status_code == 200:
+                top_gifs = json.loads(r.content)
+            else:
+                top_gifs = None
 
-# data = {'guildID': 547139967529517059, 'nsfw_channel': 711352385292992545, 'meme_channel': 694190991657402498, 'facts_chanel': 710121490212978809}
+            if top_gifs is not None and len(top_gifs['results']) != 0:
+                n = random.randint(0,len(top_gifs['results']))
+                gif_msg = await ctx.send(top_gifs['results'][n]['url'])
+                msg_id = gif_msg.id
 
-# y = mycol.insert_one(data)
+                # await gif_msg.add_reaction('✅')
+                # await gif_msg.add_reaction('❎')
+                
+            
+            else:
+                await ctx.send('**cyka blyat, that returned no results**')
 
-
-mydoc = mycol.find()
-for x in mydoc:
-    print(x['guildID'])
-    print(x['facts_channel'])
+    except Exception as e:
+        await ctx.send('**cyka blyat, that returned no results**')
+        print(e)
