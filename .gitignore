@@ -2,4 +2,4 @@ src/resources/dank_memes
 src/.env
 src/praw.ini
 src/test.py
-praw.ini
+/praw.ini
