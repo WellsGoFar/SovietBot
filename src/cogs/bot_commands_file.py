@@ -97,15 +97,15 @@ class bot_commands(commands.Cog):
         await ctx.channel.delete()
         await new_channel.edit(position=position)
 
-    @commands.command(help = ':: Shut the fuck up!!')
+    @commands.command(help = ':: Shutup!!')
     async def stfu(self, ctx, *, member: discord.Member = None): 
         if member is not None: 
             if member.name == 'SovietBot':
-                await ctx.send(f'no you shut the fuck up you retard {ctx.author.mention}')
+                await ctx.send(f'no you shut up {ctx.author.mention}')
             else:
-                await ctx.send('SHUT THE FUCK UP {0.mention}!'.format(member))
+                await ctx.send('SHUT UP {0.mention}!'.format(member))
         else:
-            await ctx.send('SHUT THE FUCK UP!')
+            await ctx.send('SHUT UP!')
 
 
     async def fetch(self, session, url):
@@ -118,7 +118,7 @@ class bot_commands(commands.Cog):
     async def get_gif_tenor(self, search_term, ctx):
         try:
             if "ashwin" in search_term:
-                await ctx.send("**fuck off retard**")
+                await ctx.send("**get lost**")
             else:
                 apikey = "8LKJCTB3AWSH"  
                 lmt = 10
@@ -209,7 +209,7 @@ class bot_commands(commands.Cog):
 
     @commands.command()
     async def ding(self,ctx):
-        await ctx.send('dong motherfucker!')
+        await ctx.send('dong!')
 
     @commands.command()
     async def scooby(self,ctx):
