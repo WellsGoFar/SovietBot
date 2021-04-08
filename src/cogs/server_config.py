@@ -23,13 +23,13 @@ class server_config(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
 
-        data = {'guildID': str(guild.id), 'guildName': guild.name,'nsfw_channel': '0', 'meme_channel': '0', 'facts_channel': '0', 'logs_channel': '0', 'welcome_message': 'Hello {user.name} welcome to {server.name}', 'exit_message': 'Sad to see you leave {user.name}', 'f_count': 0}
+        data = {'guildID': str(guild.id), 'guildName': guild.name,'nsfw_channel': '0', 'meme_channel': '0', 'facts_channel': '0', 'nooz_channel': '0', 'logs_channel': '0', 'welcome_message': 'Hello {user.name} welcome to {server.name}', 'exit_message': 'Sad to see you leave {user.name}', 'f_count': 0}
         x = self.mycol.insert_one(data)
         embed = discord.Embed(title = "Hello there! Thanks for adding me to your server. To get started type pp setup")
         for channel in guild.text_channels:
-            if channel.permissions_for(self.bot.user):
-                await channel.send(embed=embed)
-                break
+            # if channel.permissions_for(self.bot.user):
+            await channel.send(embed=embed)
+            break
 
 
     @commands.Cog.listener()
@@ -225,7 +225,49 @@ class server_config(commands.Cog):
             return
 
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def update_nooz(self,ctx):
+        
+        channel = None
+        id = str(ctx.guild.id)
+        embed = discord.Embed(title = 'Copy and paste the exact name of the channel that you want news articles on:', 
+            description = "Enter 0 if you dont want a news channel, 'skip' if you don't want to change the channel for news. You can always change that later by using 'pp setup'/'pp update_nooz'") #change
 
+        await ctx.send(embed = embed) 
+        try:
+            msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author, timeout = 120.0) 
+        except asyncio.TimeoutError:
+            await ctx.channel.purge(limit=1)
+            await ctx.send("oh heck, you waited too long. type 'pp setup' again to begin the setup process or 'pp update_nooz' to update the nooz channel'")          
+            return 1
+        except Exception as e:
+            return await ctx.send(e)
+
+        guild = self.bot.get_guild(id=int(id))
+        if msg.content == '0':
+            myquery = {"guildID": id}
+            newvalues = { "$set": { "nooz_channel": '0' } } #change
+            self.mycol.update_one(myquery, newvalues)
+            return 
+        elif msg.content == 'skip':
+            return await ctx.send('nooz skipped!')
+        else:
+            # guild = self.bot.get_guild(id=id)
+            for channel_g in guild.channels:
+                if channel_g.name == msg.content:
+                    channel = channel_g
+                    break
+            # await ctx.send('successfully updated nsfw channel')
+            if channel:
+                myquery = {"guildID": id}
+                newvalues = { "$set": { "nooz_channel": str(channel.id) } } #change
+                self.mycol.update_one(myquery, newvalues)
+                await ctx.send('successfully updated nooz channel') #change
+            else:
+                await ctx.send("**I couldn't find that channel. Check the spelling and try again , facts skipped for now, you can choose a channel for facts by typing 'pp update_nooz'**")
+                await asyncio.sleep(3.0)
+            return
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -290,6 +332,10 @@ class server_config(commands.Cog):
             return 
         temp = 0
         temp = await self.update_facts(ctx)
+        if temp == 1:
+            return 
+        temp = 0
+        temp = await self.update_nooz(ctx)
         if temp == 1:
             return 
         temp = 0
