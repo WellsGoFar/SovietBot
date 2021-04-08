@@ -23,6 +23,7 @@ class reddit_handler(commands.Cog):
         self.throw_fact.start()
         self.throw_meme.start()
         self.throw_pifs.start()
+        self.throw_nooz.start()
         # self.mydoc = mycol.find()
         # self.throw_mess.start()
 
@@ -30,6 +31,7 @@ class reddit_handler(commands.Cog):
         self.throw_fact.cancel()
         self.throw_meme.cancel()
         self.throw_pifs.cancel()
+        self.throw_nooz.cancel()
         # self.throw_mess.cancel()
 
     @tasks.loop(hours=8.0)
@@ -52,6 +54,31 @@ class reddit_handler(commands.Cog):
                     message_string = titles[i] 
                     message_url = links[i]
                     print('SENDING FACT....')
+                    if channel:
+                        await channel.send(str("""```css\n{}```Source: <{}>\n.""".format(message_string, message_url)))
+                    else:
+                        continue
+            await asyncio.sleep(1000)
+
+    @tasks.loop(hours=5.0)
+    async def throw_nooz(self):
+        # print('hi1')
+        # mydoc = self.mycol.find()
+        # print('hi2')
+        titles, links = get_nooz()
+        # print('hi2')
+        print('nooz new cycle...')
+        for i in range(len(titles)):
+            mydoc = self.mycol.find() 
+            for x in mydoc:
+                if int(x['nooz_channel'])==0:
+                    continue
+                else:
+                    channel = self.bot.get_channel(int(x['nooz_channel']))
+
+                    message_string = titles[i] 
+                    message_url = links[i]
+                    print('SENDING NOOZ ARTICLE....')
                     if channel:
                         await channel.send(str("""```css\n{}```Source: <{}>\n.""".format(message_string, message_url)))
                     else:
@@ -128,7 +155,7 @@ class reddit_handler(commands.Cog):
 
     @throw_fact.before_loop
     async def before_throw_fact(self):
-        print('waiting...')
+        print('fact waiting...')
         await self.bot.wait_until_ready()
     
     @throw_meme.before_loop
@@ -139,6 +166,11 @@ class reddit_handler(commands.Cog):
     @throw_pifs.before_loop
     async def before_throw_pif(self):
         print('pif gif waiting...')
+        await self.bot.wait_until_ready()
+
+    @throw_nooz.before_loop
+    async def before_throw_nooz(self):
+        print('nooz waiting...')
         await self.bot.wait_until_ready()
 
     # @throw_mess.before_loop
