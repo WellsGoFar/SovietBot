@@ -137,7 +137,7 @@ class reddit_handler(commands.Cog):
                     continue
                 else:
                     channel = self.bot.get_channel(int(x['nsfw_channel']))
-                    if channel:
+                    if channel and channel.is_nsfw():
                         print('SENDING PIFS....')
                         await channel.send(link)     
                     else:
