@@ -9,14 +9,14 @@ class help(commands.Cog):
 
     @commands.command()
     async def help(self, ctx):
-        await ctx.send ("""```nimrod
+        await ctx.send ("""```css
 Commands:\n
   "hello"                    :: the bot will say hello to you because your friends won't
   "changenick"               :: Changes nickname of a user
   "clear"                    :: Clear messages, accepts amount defaults to 10
+  "poll"                     :: Start a poll. Example: pp poll "is SovietBot amazing?" "yes" "YES in capital" "option 1 and 2"
   "comeback"                 :: Time for a good comeback
   "nuke"                     :: Deletes all the messages in a text channel
-  "stfu"                     :: Shut the fuck up!!
   "tripo"                    :: Tripoloski babyyyyy
   "gif"                      :: Get a random gif based on a search term; Example: pp gif dancing dog. Leave search term black for trending gifs
   "simp"                     :: for when you come across a simp

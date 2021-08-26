@@ -97,6 +97,9 @@ class ImDad(commands.Cog):
             except Exception as e:
                 await message.channel.send(e)
 
+        # if message.content.lower() == 'bot no more':
+        #     await message.channel.send('psych bitches bot is not dead')
+
         if message.content.lower() == 'st':
             if not self.current:
                 self.current=True

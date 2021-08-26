@@ -20,7 +20,7 @@ class bot_commands(commands.Cog):
         return result
 
     @commands.command()
-    async def poll(self, ctx, question, *, options):
+    async def npoll(self, ctx, question, *, options):
         reactions = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
         opts = re.findall(r'"([^"]*)"', options)
         if len(opts) > 10:
@@ -30,26 +30,17 @@ class bot_commands(commands.Cog):
             bars = [0] * len(opts) 
             formatted_options = self.format_option(opts,bars)
             # print(formatted_options)
-            poll = """```css\n{}\n```""".format(formatted_options)
+            poll = """```css\nReact to this message below to vote\n{}\n```""".format(formatted_options)
             poll_msg = await ctx.send(poll)
             try:
                 for i in range(len(opts)):
                     await poll_msg.add_reaction(reactions[i])
             except Exception as e:
                 print(e)
-            poll_id = poll_msg.id
-            ids=[]
-            with open('resources/tracks/polls.txt', 'r') as filehandler:
-                for line in filehandler:
-                    idd = line[:-1]
-                    ids.append(idd)
-            ids.append(poll_id)
-            with open('resources/tracks/polls.txt', 'w') as filehandler:
-                for listitem in ids:
-                    filehandler.write('%s\n' % listitem)
+            print('poll created')
 
-    @poll.error
-    async def poll_error(self,ctx,error):
+    @npoll.error
+    async def npoll_error(self,ctx,error):
         if isinstance(error, commands.MissingRequiredArgument):
             if error.param.name == "options":
                 embed = discord.Embed(title="Cyka blyat! That's not the correct syntax for that command",
@@ -61,23 +52,24 @@ class bot_commands(commands.Cog):
                 description='You forgot to give a question on what the poll is about: Example: pp poll "do you understand?" "yes" "no"',
                 colour = discord.Colour.blue())
                 await ctx.send(embed=embed)
+                
+
+
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self,payload):
+        print('first')
         user = self.bot.get_user(payload.user_id)
         if not user.bot:
-            ids=[]
             try:
+                print('before getting the message')
                 emoji_index = self.reactions.index(payload.emoji.name)
-                with open('resources/tracks/polls.txt', 'r') as filehandler:
-                    for line in filehandler:
-                        idd = line[:-1]
-                        ids.append(idd)
+                chnl = self.bot.get_channel(payload.channel_id)
+                msg = await chnl.fetch_message(payload.message_id)
+                content_of_msg = msg.content
                 try:
-                    if str(payload.message_id) in ids:
-                        chnl = self.bot.get_channel(payload.channel_id)
-                        msg = await chnl.fetch_message(payload.message_id)
-                        content_of_msg = msg.content
+                    print('before check')
+                    if content_of_msg.startswith('"""```css\nReact to this message below to vote\n') and msg.author.id == 710663310965473302:
                         new_content = ""
                         msg_iter = iter(content_of_msg.splitlines())
                         for line in msg_iter:
@@ -94,21 +86,16 @@ class bot_commands(commands.Cog):
                 pass
 
     @commands.Cog.listener()
-    async def on_raw_reaction_remove(self,payload):
+    async def on_raw_reaction_add(self,payload):
         user = self.bot.get_user(payload.user_id)
         if not user.bot:
-            ids=[]
             try:
                 emoji_index = self.reactions.index(payload.emoji.name)
-                with open('resources/tracks/polls.txt', 'r') as filehandler:
-                    for line in filehandler:
-                        idd = line[:-1]
-                        ids.append(idd)
+                chnl = self.bot.get_channel(payload.channel_id)
+                msg = await chnl.fetch_message(payload.message_id)
+                content_of_msg = msg.content
                 try:
-                    if str(payload.message_id) in ids:
-                        chnl = self.bot.get_channel(payload.channel_id)
-                        msg = await chnl.fetch_message(payload.message_id)
-                        content_of_msg = msg.content
+                    if content_of_msg.startswith('"""```css\nReact to this message below to vote\n') and msg.author.id == 710663310965473302:
                         new_content = ""
                         msg_iter = iter(content_of_msg.splitlines())
                         for line in msg_iter:

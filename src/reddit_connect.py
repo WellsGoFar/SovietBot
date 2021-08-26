@@ -1,6 +1,8 @@
 import praw
 import pickle
 import urllib.request
+import requests 
+from bs4 import BeautifulSoup
 reddit = praw.Reddit('bot1')
 
 # for submission in reddit.subreddit('gaming').hot(limit=15):
@@ -139,9 +141,26 @@ def get_pifs():
         if submission.id in posts or not submission.url.startswith(matcher):
             continue
         else:
-            titles.append(submission.title)
-            links.append(submission.url)
-            new_posts.append(submission.id)
+            # titles.append(submission.title)
+            if submission.url.startswith('https://redgifs.com'):
+                URL = submission.url
+                r = requests.get(URL)
+                soup = BeautifulSoup(r.content)
+                # partial_id = URL.split('/')[-1]
+                # video = soup.find(id = 'video-' + partial_id)
+                # children = video.findChildren()
+                # for child in children:
+                #     if not child['src'].endswith('-mobile.mp4'):
+                #         links.append(child['src'])
+                #         new_posts.append(submission.id)
+
+                video = soup.find("meta", property='og:video')
+                links.append(video['content'])
+                new_posts.append(submission.id)
+
+            else:
+                links.append(submission.url)
+                new_posts.append(submission.id)
             # print(submission.permalink)
         
     posts = posts + new_posts
