@@ -1,4 +1,4 @@
-@commands.command()
+# @commands.command()
 async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
 
     try:
@@ -35,3 +35,6 @@ async def gif (self, ctx, *, search_term='trending_right_now_19190572'):
     except Exception as e:
         await ctx.send('**cyka blyat, that returned no results**')
         print(e)
+
+st = "hi {} there".format('|'*3)
+print(st)

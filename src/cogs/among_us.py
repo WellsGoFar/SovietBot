@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import sys
 import re
+import asyncio
 
 class among_us(commands.Cog):
     def __init__(self,bot):
@@ -22,6 +23,7 @@ class among_us(commands.Cog):
                             continue
                         else:
                             await member.edit(mute=True)
+                            await asyncio.sleep(0.1)
                     embed = discord.Embed(title="Have fun!")
                     # await ctx.send(members[0].avatar_url)
                     await ctx.send(embed = embed)
@@ -42,6 +44,7 @@ class among_us(commands.Cog):
                     members = voice_channel.members
                     for member in members:
                         await member.edit(mute=False)
+                        await asyncio.sleep(0.1)
                     await ctx.send("**Members unmuted**")
                 else:
                     await ctx.send("You don't have the required role to use this command")

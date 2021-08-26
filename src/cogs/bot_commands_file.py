@@ -10,6 +10,9 @@ import random
 import aiohttp
 
 
+
+
+
 class bot_commands(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
@@ -95,7 +98,7 @@ class bot_commands(commands.Cog):
         position = ctx.channel.position
         new_channel = await ctx.channel.clone()
         await ctx.channel.delete()
-        await new_channel.edit(position=position)
+        # await new_channel.edit(position=position)
 
     @commands.command(help = ':: Shut the fuck up!!')
     async def stfu(self, ctx, *, member: discord.Member = None): 
@@ -117,7 +120,7 @@ class bot_commands(commands.Cog):
 
     async def get_gif_tenor(self, search_term, ctx):
         try:
-            if "ashwin" in search_term:
+            if "ashwin" in search_term.lower():
                 await ctx.send("**fuck off retard**")
             else:
                 apikey = "8LKJCTB3AWSH"  
@@ -168,6 +171,43 @@ class bot_commands(commands.Cog):
     async def roast(self, stc, member: discord.Member=None):
         pass
 
+    @commands.command()
+    async def mock(self,ctx, *, message = None):
+        # await ctx.send("new command")
+        if message is None and ctx.message.reference:
+            try:
+                message = ctx.message.reference
+                mocking_message_id = message.message_id
+                # await ctx.send(message.message_id)
+                message = await ctx.channel.fetch_message(mocking_message_id)
+                message_content = message.content
+                mocked_message =''
+                b = True
+                for c in message_content:
+                    mocked_message += c.upper() if b else c.lower()
+                    if c.isalpha():
+                        b = not b
+                await ctx.send(mocked_message)
+                await ctx.send('https://cdn.betterttv.net/emote/607873e039b5010444cffcab/3x')
+                # await ctx.send(file=discord.File('D:/SovietBot/src/resources/feelsdankman.png'))
+            except Exception as e:
+                ctx.send(e)
+        elif message is not None:
+            message_content = message
+            mocked_message =''
+            b = True
+            for c in message_content:
+                mocked_message += c.upper() if b else c.lower()
+                if c.isalpha():
+                    b = not b
+            await ctx.send(mocked_message)
+            await ctx.send('https://cdn.betterttv.net/emote/607873e039b5010444cffcab/3x')
+            # await ctx.send(file=discord.File('D:/SovietBot/src/resources/feelsdankman.png'))
+        else:
+            await ctx.send("The only thing to mock here is your dumbass")
+            await ctx.send('https://cdn.betterttv.net/emote/607873e039b5010444cffcab/3x')
+            # await ctx.send(file=discord.File('D:/SovietBot/src/resources/feelsdankman.png'))
+
 
     @commands.command(help = ':: Changes nickname of a user')
     @commands.has_permissions(manage_nicknames = True)
@@ -215,22 +255,33 @@ class bot_commands(commands.Cog):
     async def scooby(self,ctx):
         await ctx.send('dooby doo!')
 
+    intents = discord.Intents.default()
+    intents.members = True
+    intents.presences = True
+
     @commands.command(aliases = ['playing'])
     async def activity(self,ctx, *, game_name):
         result = []
         game_match = re.compile(game_name, re.IGNORECASE)
+        print('hi')
         try:
+            # members = await ctx.guild.fetch_members(limit=10)
+            # members = ctx.guild.members
+            # async for mem in ctx.guild.fetch_members():
             for mem in ctx.guild.members:
+                # await ctx.send(mem.activities)
                 for act in mem.activities:
+                    # await ctx.send(act)
                     if game_match.search(str(act.name)):
                         result.append(mem.name)
-            
             result = list(dict.fromkeys(result))
 
             if(not result):
                 await ctx.send("No one is playing that game. Make sure the spelling is correct")
             else:
                 await ctx.send(', '.join(result))
+
+            # await ctx.send(members[10])
         except Exception as e:
             await ctx.send(e)
 
