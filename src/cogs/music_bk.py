@@ -2,6 +2,7 @@ import asyncio
 import functools
 import itertools
 import math
+from os import execlpe
 import random
 
 import discord
@@ -33,7 +34,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         'logtostderr': False,
         'quiet': True,
         'no_warnings': True,
-        'default_search': 'ytsearch',
+        'default_search': 'auto',
         'source_address': '0.0.0.0',
     }
 
@@ -107,97 +108,26 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     info = processed_info['entries'].pop(0)
                 except IndexError:
                     raise YTDLError('Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
-        
-        return cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS, executable = 'D:/SovietBot/src/cogs/ffmpeg.exe'), data=info)
 
-    @classmethod
-    async def search_source(self, ctx: commands.Context, search: str, *, loop: asyncio.BaseEventLoop = None, bot):
-        self.bot = bot
-        channel = ctx.channel
-        loop = loop or asyncio.get_event_loop()
-
-        self.search_query = '%s%s:%s' % ('ytsearch', 10, ''.join(search))
-
-        partial = functools.partial(self.ytdl.extract_info, self.search_query, download=False, process=False)
-        info = await loop.run_in_executor(None, partial)
-
-        self.search = {}
-        self.search["title"] = f'Search results for:\n**{search}**'
-        self.search["type"] = 'rich'
-        self.search["color"] = 7506394
-        self.search["author"] = {'name': f'{ctx.author.name}', 'url': f'{ctx.author.avatar_url}',
-                                'icon_url': f'{ctx.author.avatar_url}'}
-
-        lst = []
-        count = 0
-        e_list = []
-        for e in info['entries']:
-            # lst.append(f'`{info["entries"].index(e) + 1}.` {e.get("title")} **[{YTDLSource.parse_duration(int(e.get("duration")))}]**\n')
-            VId = e.get('id')
-            VUrl = 'https://www.youtube.com/watch?v=%s' % (VId)
-            lst.append(f'`{count + 1}.` [{e.get("title")}]({VUrl})\n')
-            count += 1
-            e_list.append(e)
-
-        lst.append('\n**Type a number to make a choice, Type `cancel` to exit**')
-        self.search["description"] = "\n".join(lst)
-
-        em = discord.Embed.from_dict(self.search)
-        await ctx.send(embed=em, delete_after=45.0)
-
-        def check(msg):
-            return msg.content.isdigit() == True and msg.channel == channel or msg.content == 'cancel' or msg.content == 'Cancel'
-
-        try:
-            m = await self.bot.wait_for('message', check=check, timeout=45.0)
-
-        except asyncio.TimeoutError:
-            rtrn = 'timeout'
-
-        else:
-            if m.content.isdigit() == True:
-                sel = int(m.content)
-                if 0 < sel <= 10:
-                    for key, value in info.items():
-                        if key == 'entries':
-                            """data = value[sel - 1]"""
-                            VId = e_list[sel-1]['id']
-                            VUrl = 'https://www.youtube.com/watch?v=%s' % (VId)
-                            partial = functools.partial(self.ytdl.extract_info, VUrl, download=False)
-                            data = await loop.run_in_executor(None, partial)
-                    rtrn = self(ctx, discord.FFmpegPCMAudio(data['url'], **self.FFMPEG_OPTIONS, executable = 'D:/SovietBot/src/cogs/ffmpeg.exe'), data=data)
-                else:
-                    rtrn = 'sel_invalid'
-            elif m.content == 'cancel':
-                rtrn = 'cancel'
-            else:
-                rtrn = 'sel_invalid'
-
-        return rtrn
+        return cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS,  executable = 'D:/SovietBot/src/cogs/ffmpeg.exe'), data=info)
 
     @staticmethod
     def parse_duration(duration: int):
-        if duration > 0:
-            minutes, seconds = divmod(duration, 60)
-            hours, minutes = divmod(minutes, 60)
-            days, hours = divmod(hours, 24)
+        minutes, seconds = divmod(duration, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
 
-            duration = []
-            if days > 0:
-                duration.append('{}'.format(days))
-            if hours > 0:
-                duration.append('{}'.format(hours))
-            if minutes > 0:
-                duration.append('{}'.format(minutes))
-            if seconds > 0:
-                duration.append('{}'.format(seconds))
-            
-            value = ':'.join(duration)
-        
-        elif duration == 0:
-            value = "LIVE"
-        
-        return value
+        duration = []
+        if days > 0:
+            duration.append('{} days'.format(days))
+        if hours > 0:
+            duration.append('{} hours'.format(hours))
+        if minutes > 0:
+            duration.append('{} minutes'.format(minutes))
+        if seconds > 0:
+            duration.append('{} seconds'.format(seconds))
+
+        return ', '.join(duration)
 
 
 class Song:
@@ -206,15 +136,17 @@ class Song:
     def __init__(self, source: YTDLSource):
         self.source = source
         self.requester = source.requester
-    
+
     def create_embed(self):
-        embed = (discord.Embed(title='Now playing', description='```css\n{0.source.title}\n```'.format(self), color=discord.Color.blurple())
-                .add_field(name='Duration', value=self.source.duration)
-                .add_field(name='Requested by', value=self.requester.mention)
-                .add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
-                .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
-                .set_thumbnail(url=self.source.thumbnail)
-                .set_author(name=self.requester.name, icon_url=self.requester.avatar_url))
+        embed = (discord.Embed(title='Now playing',
+                               description='```css\n{0.source.title}\n```'.format(self),
+                               color=discord.Color.blurple())
+                 .add_field(name='Duration', value=self.source.duration)
+                 .add_field(name='Requested by', value=self.requester.mention)
+                 .add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
+                 .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
+                 .set_thumbnail(url=self.source.thumbnail))
+
         return embed
 
 
@@ -250,7 +182,6 @@ class VoiceState:
         self.voice = None
         self.next = asyncio.Event()
         self.songs = SongQueue()
-        self.exists = True
 
         self._loop = False
         self._volume = 1
@@ -286,7 +217,7 @@ class VoiceState:
             self.next.clear()
             self.now = None
 
-            if self.loop == False:
+            if not self.loop:
                 try:
                     async with timeout(10):  # 3 minutes
                         self.current = await self.songs.get()
@@ -294,15 +225,15 @@ class VoiceState:
                     self.bot.loop.create_task(self.stop())
                     self.exists = False
                     return
-                
+
                 self.current.source.volume = self._volume
                 self.voice.play(self.current.source, after=self.play_next_song)
                 await self.current.source.channel.send(embed=self.current.create_embed())
-            
+
             elif self.loop == True:
-                self.now = discord.FFmpegPCMAudio(self.current.source.stream_url, **YTDLSource.FFMPEG_OPTIONS)
+                self.now = discord.FFmpegPCMAudio(self.current.source.stream_url, **YTDLSource.FFMPEG_OPTIONS,  executable = 'D:/SovietBot/src/cogs/ffmpeg.exe')
                 self.voice.play(self.now, after=self.play_next_song)
-            
+
             await self.next.wait()
 
     def play_next_song(self, error=None):
@@ -329,10 +260,11 @@ class Music(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.voice_states = {}
+        self.last_connection = ''
 
     def get_voice_state(self, ctx: commands.Context):
         state = self.voice_states.get(ctx.guild.id)
-        if not state or not state.exists:
+        if not state:
             state = VoiceState(self.bot, ctx)
             self.voice_states[ctx.guild.id] = state
 
@@ -353,13 +285,6 @@ class Music(commands.Cog):
 
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
         await ctx.send('An error occurred: {}'.format(str(error)))
-
-    # @commands.Cog.listener()
-    # async def on_message(self, message):
-    #     if message.author.id != self.bot.user.id:
-    #         print(f"{message.guild}/{message.channel}/{message.author.name}>{message.content}")
-    #         if message.embeds:
-    #             print(message.embeds[0].to_dict())
 
     @commands.command(name='join', invoke_without_subcommand=True)
     async def _join(self, ctx: commands.Context):
@@ -396,7 +321,6 @@ class Music(commands.Cog):
         del self.voice_states[ctx.guild.id]
 
     # @commands.command(name='volume')
-    # @commands.is_owner()
     # async def _volume(self, ctx: commands.Context, *, volume: int):
 
     #     if not ctx.voice_state.is_playing:
@@ -410,35 +334,36 @@ class Music(commands.Cog):
 
     @commands.command(name='now', aliases=['current'])
     async def _now(self, ctx: commands.Context):
-        embed = ctx.voice_state.current.create_embed()
-        await ctx.send(embed=embed)
 
-    @commands.command(name='pause', aliases=['pa'])
+        await ctx.send(embed=ctx.voice_state.current.create_embed())
+
+    @commands.command(name='pause')
     @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: commands.Context):
-        print(">>>Pause Command:")
-        if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
+
+        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
             await ctx.message.add_reaction('⏯')
 
-    @commands.command(name='resume', aliases=['re', 'res'])
+    @commands.command(name='resume')
     @commands.has_permissions(manage_guild=True)
     async def _resume(self, ctx: commands.Context):
 
-        if ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
+        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
             await ctx.message.add_reaction('⏯')
 
     @commands.command(name='stop')
     @commands.has_permissions(manage_guild=True)
     async def _stop(self, ctx: commands.Context):
+
         ctx.voice_state.songs.clear()
 
-        if ctx.voice_state.is_playing:
+        if not ctx.voice_state.is_playing:
             ctx.voice_state.voice.stop()
             await ctx.message.add_reaction('⏹')
 
-    @commands.command(name='skip', aliases=['s'])
+    @commands.command(name='skip')
     async def _skip(self, ctx: commands.Context):
 
         if not ctx.voice_state.is_playing:
@@ -509,8 +434,12 @@ class Music(commands.Cog):
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='play', aliases=['p'])
+    @commands.command(name='play')
     async def _play(self, ctx: commands.Context, *, search: str):
+
+        
+        if not ctx.voice_state.voice:
+            await ctx.invoke(self._join)
 
         async with ctx.typing():
             try:
@@ -518,35 +447,11 @@ class Music(commands.Cog):
             except YTDLError as e:
                 await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
             else:
-                if not ctx.voice_state.voice:
-                    await ctx.invoke(self._join)
-
                 song = Song(source)
+
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
 
-    @commands.command(name='search')
-    async def _search(self, ctx: commands.Context, *, search: str):
-        async with ctx.typing():
-            try:
-                source = await YTDLSource.search_source(ctx, search, loop=self.bot.loop, bot=self.bot)
-            except YTDLError as e:
-                await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
-            else:
-                if source == 'sel_invalid':
-                    await ctx.send('Invalid selection')
-                elif source == 'cancel':
-                    await ctx.send(':white_check_mark:')
-                elif source == 'timeout':
-                    await ctx.send(':alarm_clock: **Time\'s up bud**')
-                else:
-                    if not ctx.voice_state.voice:
-                        await ctx.invoke(self._join)
-
-                    song = Song(source)
-                    await ctx.voice_state.songs.put(song)
-                    await ctx.send('Enqueued {}'.format(str(source)))
-            
     @_join.before_invoke
     @_play.before_invoke
     async def ensure_voice_state(self, ctx: commands.Context):

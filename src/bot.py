@@ -26,5 +26,6 @@ bot.load_extension("cogs.bot_management")
 bot.load_extension("cogs.reminder")
 bot.load_extension("cogs.help")
 bot.load_extension("cogs.server_config")
+bot.load_extension("cogs.music")
 
 bot.run(TOKEN)#D:\SovietBot\src\cogs\__pycache__
