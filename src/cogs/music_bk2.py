@@ -1,7 +1,6 @@
 import asyncio
 import functools
 import itertools
-from logging import exception
 import math
 import random
 
@@ -551,15 +550,6 @@ class Music(commands.Cog):
                     song = Song(source)
                     await ctx.voice_state.songs.put(song)
                     await ctx.send('Queued {}'.format(str(source)))
-
-    
-    @commands.Cog.listener()
-    async def on_voice_state_update(self, member, before, after):      
-            if before.channel is not None and after.channel is None and member.id == 710663310965473302:
-                try:
-                    del self.voice_states[before.channel.guild.id]
-                except Exception as e:
-                    pass
             
     @_join.before_invoke
     @_play.before_invoke

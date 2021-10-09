@@ -8,8 +8,29 @@ class help(commands.Cog):
         bot.remove_command('help')
 
     @commands.command()
-    async def help(self, ctx):
+    async def help(self, ctx, topic= "default"):
+      if topic.lower() == "music":
         await ctx.send ("""```css
+Commands:\n
+  "play"             :: play a song 
+  "search"           :: search for a song
+  "now"              :: currently playing song
+  "leave"            :: bot will leave the voice channel 
+  "shuffle"          :: shuffle the queue
+  "queue"            :: displays the queue
+  "remove"           :: removes a song from the queue
+  "skip"             :: skip the currently playing song
+  "pause"            :: pause the current song
+  "resume"           :: resumes the song that you or someone else just paused using pp pause..\n
+--------------------------------------------
+```""")
+
+
+      else:
+        await ctx.send ("""```css
+
+NOTE:  For music commands do \`pp help music\`
+
 Commands:\n
   "hello"                    :: the bot will say hello to you because your friends won't
   "changenick"               :: Changes nickname of a user
@@ -33,6 +54,7 @@ Server Configuration:\n
   "update_welcome"    :: Change the message the bot sends when a new member joins the server
   "update_exit"       :: Change the message bot sends when a member leaves the server
 ```""")
+
         
 def setup(bot):
     bot.add_cog(help(bot))
