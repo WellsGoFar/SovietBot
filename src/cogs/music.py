@@ -552,7 +552,6 @@ class Music(commands.Cog):
                     await ctx.voice_state.songs.put(song)
                     await ctx.send('Queued {}'.format(str(source)))
 
-    
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):      
             if before.channel is not None and after.channel is None and member.id == 710663310965473302:
