@@ -54,6 +54,7 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def announce(self,ctx):
+<<<<<<< HEAD
         # try:
         #     mydoc = self.mycol.find() 
         #     for x in mydoc:
@@ -94,6 +95,26 @@ class Admin(commands.Cog):
         except Exception as e:
                 print(e)
                 await ctx.send(e)
+=======
+        try:
+            mydoc = self.mycol.find() 
+            for x in mydoc:
+                if int(x['nsfw_channel'])==0:
+                    continue
+                else:
+                    channel = self.bot.get_channel(int(x['nsfw_channel']))
+                    if channel:
+                        embed = discord.Embed(title = 'Updates to SovietBot\'s NSFW channels', 
+                            description = 'To comply with Discord\'s community guidlines, SovietBot will only post NSFW content on channels marked as NSFW \n\n Contact server admins to make the channel NSFW if it is already not so.', colour = discord.Colour.purple())
+                        embed.add_field(name='Click here to see how to set up a NSFW channel', value = 'https://support.discord.com/hc/en-us/articles/115000084051-NSFW-Channels-and-Content#h_adc93a2c-8fc3-4775-be02-bbdbfcde5010', inline = False)
+                        await channel.send(embed = embed)
+                    else:
+                        continue
+            await ctx.send('announcement made')
+        except e as Exception:
+            print(e)
+            await ctx.send(e)
+>>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
 
 
 def setup(bot):

@@ -181,6 +181,7 @@ class bot_commands(commands.Cog):
                 # await ctx.send(message.message_id)
                 message = await ctx.channel.fetch_message(mocking_message_id)
                 message_content = message.content
+<<<<<<< HEAD
                 mocked_message = ''
                 if message.author.id == 710663310965473302:
                     mocked_message = 'mock yourself bitch ass'
@@ -190,6 +191,14 @@ class bot_commands(commands.Cog):
                         mocked_message += c.upper() if b else c.lower()
                         if c.isalpha():
                             b = not b
+=======
+                mocked_message =''
+                b = True
+                for c in message_content:
+                    mocked_message += c.upper() if b else c.lower()
+                    if c.isalpha():
+                        b = not b
+>>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
                 await ctx.send(mocked_message)
                 await ctx.send('https://cdn.betterttv.net/emote/607873e039b5010444cffcab/3x')
                 # await ctx.send(file=discord.File('D:/SovietBot/src/resources/feelsdankman.png'))
