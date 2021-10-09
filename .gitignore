@@ -3,3 +3,4 @@ src/.env
 src/praw.ini
 src/test.py
 /praw.ini
+src/cogs/ffmpeg.exe
