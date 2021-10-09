@@ -548,7 +548,6 @@ class Music(commands.Cog):
                     if not ctx.voice_state.voice:
                         await ctx.invoke(self._join)
 
-
                     song = Song(source)
                     await ctx.voice_state.songs.put(song)
                     await ctx.send('Queued {}'.format(str(source)))
