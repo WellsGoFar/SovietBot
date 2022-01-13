@@ -3,8 +3,12 @@ src/.env
 src/praw.ini
 src/test.py
 <<<<<<< HEAD
+<<<<<<< HEAD
 /praw.ini
 src/cogs/ffmpeg.exe
+=======
+/praw.ini
+>>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
 =======
 /praw.ini
 >>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
