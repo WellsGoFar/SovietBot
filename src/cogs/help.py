@@ -8,7 +8,6 @@ class help(commands.Cog):
         bot.remove_command('help')
 
     @commands.command()
-<<<<<<< HEAD
     async def help(self, ctx, topic= "default"):
       if topic.lower() == "music":
         await ctx.send ("""```css
@@ -33,11 +32,6 @@ Commands:\n
 NOTE:  For music commands do \`pp help music\`
 
 Commands:\n
-=======
-    async def help(self, ctx):
-        await ctx.send ("""```css
-Commands:\n
->>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
   "hello"                    :: the bot will say hello to you because your friends won't
   "changenick"               :: Changes nickname of a user
   "clear"                    :: Clear messages, accepts amount defaults to 10
@@ -60,10 +54,6 @@ Server Configuration:\n
   "update_welcome"    :: Change the message the bot sends when a new member joins the server
   "update_exit"       :: Change the message bot sends when a member leaves the server
 ```""")
-<<<<<<< HEAD
-
-=======
->>>>>>> 42181472b836cd91763cf64046997a5cc1af269e
         
 def setup(bot):
     bot.add_cog(help(bot))
