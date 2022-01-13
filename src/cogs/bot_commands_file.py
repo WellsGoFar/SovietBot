@@ -300,8 +300,7 @@ class bot_commands(commands.Cog):
 <<<<<<< HEAD
     @commands.command()
     async def updateeeee3344(self,ctx):
-        await ctx.send('Hello @everyone, I come with a bad news today. After a lot of thinking I have decided to stop working on SovietBot altogether. It\'s been a wild ride for the past 2 years. SovietBot started as a personal project to share some good memes with my friends and it grew so fast that I was blown away. With almost 10000 daily active users for SovietBot, I would like to thank each and everyone of you for using this thing that I built. It\'s gotten really difficult for me to keep SovietBot updated for the past year ever since I got a full time job and at this point I am just not in the right headspace to keep working on this. As the bot continues to grow there is always a new issue everyday and I don\'t seem to be able to keep up with it. I will keep the bot running for as long as I can but I might not be able to work on any new user suggested features or fix any bugs. I hope all of you understand. Maybe I\'ll start working on this again after some time but I am not sure. With that begin said I am going to end this message here, Stay safe! \n- Ashwin (GarlicInSpace)')
-        # await ctx.send('As always thanks for using SovietBot and (maybe?) a happy new year!')
+        pass
         # await ctx.send('- Ashwin (GarlicInSpace)')
 
 =======
