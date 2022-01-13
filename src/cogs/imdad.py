@@ -101,44 +101,50 @@ class ImDad(commands.Cog):
         #     await message.channel.send('psych bitches bot is not dead')
 
         if message.content.lower() == 'st':
-            if not self.current:
-                self.current=True
-                try:
-                    role = discord.utils.find(lambda r: r.name == 'AmongUs', message.guild.roles)
-                    if role in message.author.roles or message.author.guild_permissions.administrator:
-                        voice_channel = self.bot.get_channel(749156355688104036)
-                        members = voice_channel.members
-                        for member in members:
-                            if member.id == 234395307759108106:
-                                continue
-                            else:
-                                await member.edit(mute=True)
-                                await asyncio.sleep(0.1)
-                        embed = discord.Embed(title="Have fun!")
-                        await message.channel.send(embed = embed)
-                    else:
-                        await message.channel.send("You don't have the required role to use this command")
-                except Exception as e:
-                    await message.channel.send(e)
-                self.current=False
+            if not message.channel.author.voice or not message.channel.author.voice.channel:
+                await message.channel.send("You gotta connect to the Among Us voice channel dumbass")
+            else:
+                if not self.current:
+                    self.current=True
+                    try:
+                        role = discord.utils.find(lambda r: r.name == 'AmongUs', message.guild.roles)
+                        if role in message.author.roles or message.author.guild_permissions.administrator:
+                            voice_channel = self.bot.get_channel(749156355688104036)
+                            members = voice_channel.members
+                            for member in members:
+                                if member.id == 234395307759108106:
+                                    continue
+                                else:
+                                    await member.edit(mute=True)
+                                    await asyncio.sleep(0.1)
+                            embed = discord.Embed(title="Have fun!")
+                            await message.channel.send(embed = embed)
+                        else:
+                            await message.channel.send("You don't have the required role to use this command")
+                    except Exception as e:
+                        await message.channel.send(e)
+                    self.current=False
             
         if message.content.lower() == 'sp':
-            if not self.current:
-                self.current=True
-                try:
-                    role = discord.utils.find(lambda r: r.name == 'AmongUs', message.guild.roles)
-                    if role in message.author.roles or message.author.guild_permissions.administrator:
-                        voice_channel = self.bot.get_channel(749156355688104036)
-                        members = voice_channel.members
-                        for member in members:
-                            await member.edit(mute=False)
-                            await asyncio.sleep(0.1)
-                        await message.channel.send("**Members unmuted**")
-                    else:
-                        await message.channel.send("You don't have the required role to use this command")
-                except Exception as e:
-                    await message.channel.send(e)
-                self.current=False
+            if not message.channel.author.voice or not message.channel.author.voice.channel:
+                await message.channel.send("You gotta connect to the Among Us voice channel dumbass")
+            else:
+                if not self.current:
+                    self.current=True
+                    try:
+                        role = discord.utils.find(lambda r: r.name == 'AmongUs', message.guild.roles)
+                        if role in message.author.roles or message.author.guild_permissions.administrator:
+                            voice_channel = self.bot.get_channel(749156355688104036)
+                            members = voice_channel.members
+                            for member in members:
+                                await member.edit(mute=False)
+                                await asyncio.sleep(0.1)
+                            await message.channel.send("**Members unmuted**")
+                        else:
+                            await message.channel.send("You don't have the required role to use this command")
+                    except Exception as e:
+                        await message.channel.send(e)
+                    self.current=False
 
 
 
